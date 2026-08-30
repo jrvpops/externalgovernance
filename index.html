@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>EGDFB – External Governance & Digital Forensics Bureau</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            950: '#0a0f1e',
+                            900: '#0d1b2a',
+                            800: '#11233a',
+                            700: '#162d4a',
+                            600: '#1b3a5c',
+                        },
+                        charcoal: {
+                            950: '#12121f',
+                            900: '#1a1a2e',
+                            800: '#222238',
+                            700: '#2a2a42',
+                            600: '#35354d',
+                        },
+                        gold: {
+                            50: '#fffdf5',
+                            100: '#fef9e7',
+                            200: '#fdf0c0',
+                            300: '#f5c842',
+                            400: '#e6b830',
+                            500: '#d4a520',
+                            600: '#b8900a',
+                            700: '#8a6c08',
+                            800: '#5c4805',
+                        },
+                        slate_custom: {
+                            100: '#ffffff',
+                            200: '#e2e8f0',
+                            300: '#b0b8c1',
+                            400: '#8892a0',
+                            500: '#64748b',
+                        },
+                        status: {
+                            blue: '#3b82f6',
+                            bluebg: '#1e3a5f',
+                            amber: '#f59e0b',
+                            amberbg: '#4a3600',
+                            gray: '#9ca3af',
+                            graybg: '#2a2a3a',
+                            green: '#22c55e',
+                            greenbg: '#14432a',
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        :root {
+            --navy-deep: #0a0f1e;
+            --navy: #0d1b2a;
+            --charcoal: #1a1a2e;
+            --gold: #f5c842;
+            --gold-dim: #d4a520;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b8c1;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--navy-deep);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .hero-grid-bg {
+            background-image:
+                linear-gradient(rgba(245,200,66,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(245,200,66,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .gold-left-border {
+            border-left: 4px solid var(--gold);
+            padding-left: 1.5rem;
+        }
+
+        .tab-btn { transition: all 0.25s ease; }
+        .tab-btn.active {
+            background-color: var(--gold);
+            color: #0a0f1e;
+            font-weight: 600;
+        }
+        .tab-btn:not(.active):hover {
+            background-color: rgba(245,200,66,0.12);
+        }
+
+        .dossier-card {
+            background: linear-gradient(135deg, rgba(26,26,46,0.9), rgba(13,27,42,0.9));
+            border: 1px solid rgba(245,200,66,0.15);
+            transition: border-color 0.3s ease, transform 0.3s ease;
+        }
+        .dossier-card:hover {
+            border-color: rgba(245,200,66,0.35);
+            transform: translateY(-2px);
+        }
+
+        .expand-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+        .expand-content.open {
+            max-height: 500px;
+            opacity: 1;
+        }
+
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        }
+        .fade-in-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .pillar-card {
+            background: linear-gradient(135deg, rgba(13,27,42,0.7), rgba(26,26,46,0.5));
+            border: 1px solid rgba(245,200,66,0.1);
+        }
+        .pillar-card:hover { border-color: rgba(245,200,66,0.3); }
+
+        .service-card {
+            background: linear-gradient(145deg, rgba(26,26,46,0.8), rgba(18,18,31,0.9));
+            border: 1px solid rgba(245,200,66,0.08);
+            transition: all 0.3s ease;
+        }
+        .service-card:hover {
+            border-color: rgba(245,200,66,0.25);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(245,200,66,0.06);
+        }
+
+        .seal-ring {
+            animation: slow-rotate 60s linear infinite;
+        }
+        @keyframes slow-rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        input, select, textarea {
+            font-size: 16px;
+        }
+
+        .nav-link {
+            position: relative;
+            transition: color 0.25s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.25s ease;
+        }
+        .nav-link:hover::after { width: 100%; }
+        .nav-link:hover { color: var(--gold); }
+
+        .confirmation-msg {
+            background: linear-gradient(135deg, rgba(34,197,94,0.15), rgba(34,197,94,0.05));
+            border: 1px solid rgba(34,197,94,0.3);
+        }
+    </style>
+</head>
+<body data-id="0">
+    <app-icon data-id="1" hidden data-icon="shield" data-palette="Dark"></app-icon>
+
+    <!-- FIXED NAVIGATION -->
+    <header data-id="2" id="navbar-xk82" class="fixed top-0 left-0 right-0 z-50 bg-navy-950/95 backdrop-blur-md border-b border-gold-300/10">
+        <div data-id="3" class="max-w-7xl mx-auto px-4 md:px-6 flex items-center justify-between h-16 md:h-[72px]">
+            <!-- Logo -->
+            <a data-id="4" href="#hero" class="flex items-center gap-2 md:gap-3 shrink-0">
+                <div data-id="5" class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-gold-300/10 border border-gold-300/30 flex items-center justify-center">
+                    <i data-id="6" data-lucide="shield" class="w-4 h-4 md:w-5 md:h-5 text-gold-300"></i>
+                </div>
+                <div data-id="7">
+                    <span data-id="8" class="text-sm md:text-base font-bold text-white tracking-wide">EGDFB</span>
+                    <span data-id="9" class="hidden lg:inline text-xs text-slate_custom-300 ml-2">External Governance & Digital Forensics Bureau</span>
+                </div>
+            </a>
+            <!-- Desktop Nav -->
+            <nav data-id="10" class="hidden md:flex items-center gap-6 lg:gap-8">
+                <a data-id="11" href="#mission" class="nav-link text-sm font-medium text-slate_custom-300">Mission</a>
+                <a data-id="12" href="#services" class="nav-link text-sm font-medium text-slate_custom-300">What We Do</a>
+                <a data-id="13" href="#complaints" class="nav-link text-sm font-medium text-slate_custom-300">Sample Complaints</a>
+                <a data-id="14" href="#contact" class="nav-link text-sm font-medium text-slate_custom-300">Contact</a>
+            </nav>
+            <!-- Mobile Menu Button -->
+            <button data-id="15" id="mobile-menu-btn-r4kp" class="md:hidden p-2 text-slate_custom-300 hover:text-gold-300 transition-colors" aria-label="Open menu">
+                <i data-id="16" data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <nav data-id="17" id="mobile-menu-j7dw" class="hidden fixed inset-0 bg-navy-950/98 z-50 flex flex-col items-center justify-center gap-8">
+            <button data-id="18" id="mobile-menu-close-a3fn" class="absolute top-4 right-4 p-2 text-slate_custom-300 hover:text-gold-300" aria-label="Close menu">
+                <i data-id="19" data-lucide="x" class="w-7 h-7"></i>
+            </button>
+            <a data-id="20" href="#mission" class="mobile-nav-link text-lg font-medium text-slate_custom-200 hover:text-gold-300 transition-colors">Mission</a>
+            <a data-id="21" href="#services" class="mobile-nav-link text-lg font-medium text-slate_custom-200 hover:text-gold-300 transition-colors">What We Do</a>
+            <a data-id="22" href="#complaints" class="mobile-nav-link text-lg font-medium text-slate_custom-200 hover:text-gold-300 transition-colors">Sample Complaints</a>
+            <a data-id="23" href="#contact" class="mobile-nav-link text-lg font-medium text-slate_custom-200 hover:text-gold-300 transition-colors">Contact</a>
+        </nav>
+    </header>
+
+    <main data-id="24">
+        <!-- ===== SECTION 1: HERO ===== -->
+        <section data-id="25" id="hero" class="relative min-h-screen flex items-center justify-center bg-navy-950 hero-grid-bg pt-20 pb-16 px-4 md:px-6">
+            <!-- Radial glow -->
+            <div data-id="26" class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(245,200,66,0.04)_0%,transparent_70%)]"></div>
+            <div data-id="27" class="relative z-10 max-w-5xl mx-auto text-center flex flex-col items-center">
+                <!-- Seal / Emblem -->
+                <div data-id="28" class="relative w-40 h-40 md:w-52 md:h-52 mb-8 md:mb-10">
+                    <svg data-id="29" viewBox="0 0 200 200" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Outer ring -->
+                        <circle data-id="30" cx="100" cy="100" r="96" fill="none" stroke="#f5c842" stroke-width="1.5" opacity="0.4"/>
+                        <circle data-id="31" cx="100" cy="100" r="88" fill="none" stroke="#f5c842" stroke-width="0.5" opacity="0.25"/>
+                        <!-- Rotating decorative ring -->
+                        <g data-id="32" class="seal-ring" style="transform-origin:100px 100px">
+                            <circle data-id="33" cx="100" cy="100" r="92" fill="none" stroke="#f5c842" stroke-width="0.5" stroke-dasharray="3 8" opacity="0.3"/>
+                        </g>
+                        <!-- Inner filled circle -->
+                        <circle data-id="34" cx="100" cy="100" r="78" fill="#0d1b2a" stroke="#f5c842" stroke-width="1" opacity="0.6"/>
+                        <!-- Shield shape -->
+                        <path data-id="35" d="M100 42 L130 58 L130 100 Q130 135 100 155 Q70 135 70 100 L70 58 Z" fill="none" stroke="#f5c842" stroke-width="1.5" opacity="0.8"/>
+                        <path data-id="36" d="M100 48 L126 62 L126 100 Q126 131 100 149 Q74 131 74 100 L74 62 Z" fill="rgba(245,200,66,0.06)"/>
+                        <!-- Scales of justice -->
+                        <line data-id="37" x1="100" y1="68" x2="100" y2="120" stroke="#f5c842" stroke-width="1.2" opacity="0.7"/>
+                        <line data-id="38" x1="82" y1="82" x2="118" y2="82" stroke="#f5c842" stroke-width="1.2" opacity="0.7"/>
+                        <!-- Left pan -->
+                        <line data-id="39" x1="82" y1="82" x2="78" y2="98" stroke="#f5c842" stroke-width="0.8" opacity="0.6"/>
+                        <line data-id="40" x1="82" y1="82" x2="86" y2="98" stroke="#f5c842" stroke-width="0.8" opacity="0.6"/>
+                        <path data-id="41" d="M76 98 Q82 104 88 98" fill="none" stroke="#f5c842" stroke-width="0.8" opacity="0.6"/>
+                        <!-- Right pan -->
+                        <line data-id="42" x1="118" y1="82" x2="114" y2="98" stroke="#f5c842" stroke-width="0.8" opacity="0.6"/>
+                        <line data-id="43" x1="118" y1="82" x2="122" y2="98" stroke="#f5c842" stroke-width="0.8" opacity="0.6"/>
+                        <path data-id="44" d="M112 98 Q118 104 124 98" fill="none" stroke="#f5c842" stroke-width="0.8" opacity="0.6"/>
+                        <!-- Base -->
+                        <rect data-id="45" x="94" y="118" width="12" height="4" rx="1" fill="#f5c842" opacity="0.5"/>
+                        <rect data-id="46" x="90" y="122" width="20" height="3" rx="1" fill="#f5c842" opacity="0.4"/>
+                        <!-- Top circle on shield -->
+                        <circle data-id="47" cx="100" cy="68" r="4" fill="#f5c842" opacity="0.5"/>
+                        <!-- Text around circle -->
+                        <defs data-id="48">
+                            <path data-id="49" id="textCircleTop" d="M100,100 m-72,0 a72,72 0 1,1 144,0"/>
+                            <path data-id="50" id="textCircleBottom" d="M100,100 m72,0 a72,72 0 1,1 -144,0"/>
+                        </defs>
+                        <text data-id="51" fill="#f5c842" font-size="9" font-family="Inter, sans-serif" font-weight="600" letter-spacing="4" opacity="0.7">
+                            <textPath data-id="52" href="#textCircleTop" startOffset="50%" text-anchor="middle">E G D F B</textPath>
+                        </text>
+                        <text data-id="53" fill="#f5c842" font-size="7" font-family="Inter, sans-serif" font-weight="500" letter-spacing="2" opacity="0.5">
+                            <textPath data-id="54" href="#textCircleBottom" startOffset="50%" text-anchor="middle">EST. 2024 ★ DECANON ★</textPath>
+                        </text>
+                        <!-- Stars -->
+                        <circle data-id="55" cx="35" cy="100" r="1.5" fill="#f5c842" opacity="0.5"/>
+                        <circle data-id="56" cx="165" cy="100" r="1.5" fill="#f5c842" opacity="0.5"/>
+                    </svg>
+                </div>
+
+                <h1 data-id="57" id="hero-title-q9wz" class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight mb-4">
+                    External Governance &<br data-id="58" class="hidden sm:block"/> Digital Forensics Bureau
+                </h1>
+                <p data-id="59" id="hero-tagline-m2xv" class="text-gold-300 text-sm md:text-base font-semibold tracking-[0.25em] uppercase mb-6">
+                    Accountability · Integrity · Transparency
+                </p>
+                <p data-id="60" id="hero-body-lk4f" class="max-w-2xl text-slate_custom-300 text-sm md:text-base leading-relaxed mb-8 md:mb-10 px-2">
+                    EGDFB is an independent forensic governance body operating under the Decanon framework — dedicated to exposing systemic failures, documenting chain-of-conduct violations, and advancing structural reform across regulatory and administrative institutions.
+                </p>
+                <div data-id="61" class="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                    <a data-id="62" href="#mission" id="cta-mission-p3rw" class="inline-flex items-center justify-center gap-2 bg-gold-300 hover:bg-gold-400 text-navy-950 font-semibold px-6 py-3 rounded-lg text-sm transition-colors min-h-[44px]">
+                        <i data-id="63" data-lucide="target" class="w-4 h-4"></i>
+                        Our Mission
+                    </a>
+                    <a data-id="64" href="#complaints" id="cta-filings-v8dk" class="inline-flex items-center justify-center gap-2 bg-transparent border border-gold-300/40 text-gold-300 hover:bg-gold-300/10 font-medium px-6 py-3 rounded-lg text-sm transition-colors min-h-[44px]">
+                        <i data-id="65" data-lucide="file-text" class="w-4 h-4"></i>
+                        View Sample Filings
+                    </a>
+                </div>
+            </div>
+            <!-- Bottom fade -->
+            <div data-id="66" class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-charcoal-900 to-transparent"></div>
+        </section>
+
+        <!-- ===== SECTION 2: MISSION ===== -->
+        <section data-id="67" id="mission" class="fade-in-section bg-charcoal-900 py-16 md:py-24 px-4 md:px-6">
+            <div data-id="68" class="max-w-5xl mx-auto">
+                <div data-id="69" class="flex items-center gap-3 mb-4">
+                    <div data-id="70" class="w-8 h-[2px] bg-gold-300"></div>
+                    <span data-id="71" class="text-gold-300 text-xs font-semibold tracking-[0.2em] uppercase">Our Purpose</span>
+                </div>
+                <h2 data-id="72" id="mission-title-f5hn" class="text-2xl md:text-3xl font-bold text-white mb-10">Our Mission</h2>
+
+                <!-- Pull Quote -->
+                <div data-id="73" class="gold-left-border mb-12 md:mb-16">
+                    <blockquote data-id="74" id="mission-quote-k7qz" class="text-base md:text-lg lg:text-xl text-slate_custom-200 italic leading-relaxed">
+                        "To investigate, document, and formally challenge institutional misconduct across insurance, legal, legislative, and administrative sectors — ensuring that no governance failure goes unexamined."
+                    </blockquote>
+                </div>
+
+                <!-- Three Pillars -->
+                <div data-id="75" class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
+                    <div data-id="76" class="pillar-card rounded-xl p-6 md:p-8 transition-all duration-300">
+                        <div data-id="77" class="flex items-center gap-3 mb-4">
+                            <i data-id="78" data-lucide="shield-check" class="w-5 h-5 text-gold-300"></i>
+                            <h3 data-id="79" class="text-lg font-semibold text-white">Independence</h3>
+                        </div>
+                        <p data-id="80" class="text-sm text-slate_custom-300 leading-relaxed">
+                            We operate free from institutional capture, insurance industry influence, and political alignment. Our findings are evidence-based.
+                        </p>
+                    </div>
+                    <div data-id="81" class="pillar-card rounded-xl p-6 md:p-8 transition-all duration-300">
+                        <div data-id="82" class="flex items-center gap-3 mb-4">
+                            <i data-id="83" data-lucide="scale" class="w-5 h-5 text-gold-300"></i>
+                            <h3 data-id="84" class="text-lg font-semibold text-white">Accountability</h3>
+                        </div>
+                        <p data-id="85" class="text-sm text-slate_custom-300 leading-relaxed">
+                            Every filing is traceable, documented, and submitted through proper regulatory channels. We do not speculate — we substantiate.
+                        </p>
+                    </div>
+                    <div data-id="86" class="pillar-card rounded-xl p-6 md:p-8 transition-all duration-300">
+                        <div data-id="87" class="flex items-center gap-3 mb-4">
+                            <i data-id="88" data-lucide="landmark" class="w-5 h-5 text-gold-300"></i>
+                            <h3 data-id="89" class="text-lg font-semibold text-white">Reform</h3>
+                        </div>
+                        <p data-id="90" class="text-sm text-slate_custom-300 leading-relaxed">
+                            Beyond exposure, EGDFB advances structural recommendations to legislative bodies, bar associations, and administrative agencies.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SECTION 3: WHAT WE DO ===== -->
+        <section data-id="91" id="services" class="fade-in-section bg-navy-900 py-16 md:py-24 px-4 md:px-6">
+            <div data-id="92" class="max-w-5xl mx-auto">
+                <div data-id="93" class="flex items-center gap-3 mb-4">
+                    <div data-id="94" class="w-8 h-[2px] bg-gold-300"></div>
+                    <span data-id="95" class="text-gold-300 text-xs font-semibold tracking-[0.2em] uppercase">Practice Areas</span>
+                </div>
+                <h2 data-id="96" id="services-title-w2mc" class="text-2xl md:text-3xl font-bold text-white mb-2">What We Do</h2>
+                <p data-id="97" class="text-slate_custom-300 text-sm md:text-base mb-10">Four Core Practice Areas</p>
+
+                <div data-id="98" class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+                    <div data-id="99" class="service-card rounded-xl p-6 md:p-8">
+                        <div data-id="100" class="flex items-center gap-3 mb-4">
+                            <div data-id="101" class="w-10 h-10 rounded-lg bg-gold-300/10 flex items-center justify-center">
+                                <i data-id="102" data-lucide="settings" class="w-5 h-5 text-gold-300"></i>
+                            </div>
+                            <h3 data-id="103" class="text-base md:text-lg font-semibold text-white">Governance Modernization</h3>
+                        </div>
+                        <p data-id="104" class="text-sm text-slate_custom-300 leading-relaxed">
+                            We audit outdated administrative frameworks and identify where legacy governance structures enable regulatory arbitrage, systemic delay, or institutional insulation from accountability.
+                        </p>
+                    </div>
+                    <div data-id="105" class="service-card rounded-xl p-6 md:p-8">
+                        <div data-id="106" class="flex items-center gap-3 mb-4">
+                            <div data-id="107" class="w-10 h-10 rounded-lg bg-gold-300/10 flex items-center justify-center">
+                                <i data-id="108" data-lucide="link" class="w-5 h-5 text-gold-300"></i>
+                            </div>
+                            <h3 data-id="109" class="text-base md:text-lg font-semibold text-white">Chain-Integrity Diagnostics</h3>
+                        </div>
+                        <p data-id="110" class="text-sm text-slate_custom-300 leading-relaxed">
+                            We trace the full procedural and evidentiary chain in regulatory, legal, and administrative matters — identifying where documentation was fabricated, suppressed, or misrepresented.
+                        </p>
+                    </div>
+                    <div data-id="111" class="service-card rounded-xl p-6 md:p-8">
+                        <div data-id="112" class="flex items-center gap-3 mb-4">
+                            <div data-id="113" class="w-10 h-10 rounded-lg bg-gold-300/10 flex items-center justify-center">
+                                <i data-id="114" data-lucide="search" class="w-5 h-5 text-gold-300"></i>
+                            </div>
+                            <h3 data-id="115" class="text-base md:text-lg font-semibold text-white">Administrative Forensics</h3>
+                        </div>
+                        <p data-id="116" class="text-sm text-slate_custom-300 leading-relaxed">
+                            Using document analysis, timeline reconstruction, and cross-institutional pattern mapping, we build formal forensic records suitable for regulatory submission, litigation support, or legislative testimony.
+                        </p>
+                    </div>
+                    <div data-id="117" class="service-card rounded-xl p-6 md:p-8">
+                        <div data-id="118" class="flex items-center gap-3 mb-4">
+                            <div data-id="119" class="w-10 h-10 rounded-lg bg-gold-300/10 flex items-center justify-center">
+                                <i data-id="120" data-lucide="clipboard-list" class="w-5 h-5 text-gold-300"></i>
+                            </div>
+                            <h3 data-id="121" class="text-base md:text-lg font-semibold text-white">PD Alignment</h3>
+                        </div>
+                        <p data-id="122" class="text-sm text-slate_custom-300 leading-relaxed">
+                            We evaluate whether public-facing policies and regulatory disclosures match actual institutional conduct — exposing gaps between stated procedure and operational reality.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SECTION 4: SAMPLE COMPLAINTS ===== -->
+        <section data-id="123" id="complaints" class="fade-in-section bg-charcoal-900 py-16 md:py-24 px-4 md:px-6">
+            <div data-id="124" class="max-w-5xl mx-auto">
+                <div data-id="125" class="flex items-center gap-3 mb-4">
+                    <div data-id="126" class="w-8 h-[2px] bg-gold-300"></div>
+                    <span data-id="127" class="text-gold-300 text-xs font-semibold tracking-[0.2em] uppercase">Dossier Files</span>
+                </div>
+                <h2 data-id="128" id="complaints-title-d3nm" class="text-2xl md:text-3xl font-bold text-white mb-2">Sample Complaints</h2>
+                <p data-id="129" class="text-slate_custom-300 text-sm md:text-base mb-6">Redacted Dossier Files — Illustrative Filings</p>
+
+                <!-- Disclaimer -->
+                <div data-id="130" class="bg-gold-300/5 border border-gold-300/20 rounded-lg p-4 mb-8 flex items-start gap-3">
+                    <i data-id="131" data-lucide="alert-triangle" class="w-5 h-5 text-gold-300 shrink-0 mt-0.5"></i>
+                    <p data-id="132" class="text-xs md:text-sm text-slate_custom-300 leading-relaxed">
+                        All documents below are illustrative redacted samples. Names, case numbers, and identifying information have been altered to protect privacy. These filings demonstrate the EGDFB's documentation methodology.
+                    </p>
+                </div>
+
+                <!-- Tabs -->
+                <div data-id="133" id="tabs-container-h8dq" class="flex flex-wrap gap-2 mb-8">
+                    <button data-id="134" class="tab-btn active text-xs md:text-sm px-3 md:px-4 py-2 rounded-lg border border-gold-300/20 text-slate_custom-300 transition-all min-h-[44px]" data-tab="bar">Bar Complaints</button>
+                    <button data-id="135" class="tab-btn text-xs md:text-sm px-3 md:px-4 py-2 rounded-lg border border-gold-300/20 text-slate_custom-300 transition-all min-h-[44px]" data-tab="press">Press Releases</button>
+                    <button data-id="136" class="tab-btn text-xs md:text-sm px-3 md:px-4 py-2 rounded-lg border border-gold-300/20 text-slate_custom-300 transition-all min-h-[44px]" data-tab="agent">Agent Complaints</button>
+                    <button data-id="137" class="tab-btn text-xs md:text-sm px-3 md:px-4 py-2 rounded-lg border border-gold-300/20 text-slate_custom-300 transition-all min-h-[44px]" data-tab="cdi">CDI Complaints</button>
+                    <button data-id="138" class="tab-btn text-xs md:text-sm px-3 md:px-4 py-2 rounded-lg border border-gold-300/20 text-slate_custom-300 transition-all min-h-[44px]" data-tab="bill">Bill Oppositions</button>
+                </div>
+
+                <!-- Tab Content -->
+                <div data-id="139" id="tab-content-area-z5rp">
+                    <!-- BAR COMPLAINTS -->
+                    <div data-id="140" class="tab-panel space-y-5" data-panel="bar">
+                        <div data-id="141" class="dossier-card rounded-xl p-5 md:p-6">
+                            <div data-id="142" class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                                <div data-id="143">
+                                    <span data-id="144" class="text-xs font-mono text-gold-300/80 tracking-wide">EGDFB-BC-2024-001</span>
+                                    <span data-id="145" class="text-xs text-slate_custom-400 ml-2 md:ml-4">March 14, 2024</span>
+                                </div>
+                                <span data-id="146" class="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full bg-status-bluebg text-status-blue w-fit">Submitted</span>
+                            </div>
+                            <p data-id="147" class="text-xs text-slate_custom-400 mb-2">Subject: <span data-id="148" class="text-slate_custom-300">[REDACTED — Licensed Attorney, State Bar #XXXXX]</span></p>
+                            <p data-id="149" class="text-sm text-slate_custom-200 leading-relaxed mb-4">
+                                Formal complaint alleging violation of Rules of Professional Conduct 3.3 (Candor Toward the Tribunal) and 8.4 (Misconduct). Attorney allegedly submitted declarations containing material misrepresentations in a civil coverage dispute proceeding. Supporting exhibits include timestamped correspondence chains and policy document comparisons demonstrating factual inconsistencies.
+                            </p>
+                            <button data-id="150" class="view-summary-btn flex items-center gap-2 text-xs font-medium text-gold-300 hover:text-gold-400 transition-colors min-h-[44px]" data-target="expand-bc1">
+                                <i data-id="151" data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                                View Summary
+                            </button>
+                            <div data-id="152" id="expand-bc1" class="expand-content mt-3 pt-3 border-t border-gold-300/10">
+                                <p data-id="153" class="text-sm text-slate_custom-300 leading-relaxed">
+                                    The subject attorney's filings contained assertions regarding policy endorsement dates that are contradicted by the insurer's own underwriting records. Cross-referencing three independent document timestamps reveals a 47-day discrepancy inconsistent with the attorney's stated timeline. EGDFB has submitted this matter to the relevant State Bar disciplinary authority with a formal request for investigation.
+                                </p>
+                            </div>
+                        </div>
+                        <div data-id="154" class="dossier-card rounded-xl p-5 md:p-6">
+                            <div data-id="155" class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                                <div data-id="156">
+                                    <span data-id="157" class="text-xs font-mono text-gold-300/80 tracking-wide">EGDFB-BC-2024-002</span>
+                                    <span data-id="158" class="text-xs text-slate_custom-400 ml-2 md:ml-4">June 3, 2024</span>
+                                </div>
+                                <span data-id="159" class="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full bg-status-amberbg text-status-amber w-fit">Under Review</span>
+                            </div>
+                            <p data-id="160" class="text-xs text-slate_custom-400 mb-2">Subject: <span data-id="161" class="text-slate_custom-300">[REDACTED — Licensed Attorney, State Bar #XXXXX]</span></p>
+                            <p data-id="162" class="text-sm text-slate_custom-200 leading-relaxed mb-4">
+                                Complaint alleging failure to disclose material conflict of interest in a regulatory proceeding. The attorney simultaneously represented a carrier and appeared as counsel in an adjacent administrative matter involving the same policyholder, without obtaining written waiver or disclosing the dual representation.
+                            </p>
+                            <button data-id="163" class="view-summary-btn flex items-center gap-2 text-xs font-medium text-gold-300 hover:text-gold-400 transition-colors min-h-[44px]" data-target="expand-bc2">
+                                <i data-id="164" data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                                View Summary
+                            </button>
+                            <div data-id="165" id="expand-bc2" class="expand-content mt-3 pt-3 border-t border-gold-300/10">
+                                <p data-id="166" class="text-sm text-slate_custom-300 leading-relaxed">
+                                    Document review of court filings across two separate proceedings confirms shared party identification. The attorney's letterhead and certification signatures appear in both matters within a 22-day window. No conflict waiver was filed in either proceeding. EGDFB has requested the Bar's Office of Chief Trial Counsel conduct a formal conflict-of-interest inquiry.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PRESS RELEASES -->
+                    <div data-id="167" class="tab-panel space-y-5 hidden" data-panel="press">
+                        <div data-id="168" class="dossier-card rounded-xl p-5 md:p-6">
+                            <div data-id="169" class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                                <div data-id="170">
+                                    <span data-id="171" class="text-xs font-mono text-gold-300/80 tracking-wide">EGDFB-PR-2024-001</span>
+                                    <span data-id="172" class="text-xs text-slate_custom-400 ml-2 md:ml-4">April 22, 2024</span>
+                                </div>
+                                <span data-id="173" class="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full bg-status-greenbg text-status-green w-fit">Published</span>
+                            </div>
+                            <p data-id="174" class="text-xs text-slate_custom-400 mb-2">Subject: <span data-id="175" class="text-slate_custom-300">EGDFB Publishes Initial Governance Audit Framework</span></p>
+                            <p data-id="176" class="text-sm text-slate_custom-200 leading-relaxed mb-4">
+                                EGDFB announces the release of its inaugural Governance Audit Framework, a structured methodology for evaluating institutional compliance across California insurance, legal, and administrative sectors.
+                            </p>
+                            <button data-id="177" class="view-summary-btn flex items-center gap-2 text-xs font-medium text-gold-300 hover:text-gold-400 transition-colors min-h-[44px]" data-target="expand-pr1">
+                                <i data-id="178" data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                                View Summary
+                            </button>
+                            <div data-id="179" id="expand-pr1" class="expand-content mt-3 pt-3 border-t border-gold-300/10">
+                                <p data-id="180" class="text-sm text-slate_custom-300 leading-relaxed">
+                                    The framework establishes a five-tier documentation protocol for chain-integrity review, administrative forensics, and policy alignment audits. EGDFB invites public comment and regulatory engagement through its formal submission portal. Initial pilot audits have been conducted across three undisclosed institutional subjects.
+                                </p>
+                            </div>
+                        </div>
+                        <div data-id="181" class="dossier-card rounded-xl p-5 md:p-6">
+                            <div data-id="182" class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                                <div data-id="183">
+                                    <span data-id="184" class="text-xs font-mono text-gold-300/80 tracking-wide">EGDFB-PR-2024-002</span>
+                                    <span data-id="185" class="text-xs text-slate_custom-400 ml-2 md:ml-4">August 10, 2024</span>
+                                </div>
+                                <span data-id="186" class="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full bg-status-greenbg text-status-green w-fit">Published</span>
+                            </div>
+                            <p data-id="187" class="text-xs text-slate_custom-400 mb-2">Subject: <span data-id="188" class="text-slate_custom-300">EGDFB Issues Findings on Carrier Conduct Patterns</span></p>
+                            <p data-id="189" class="text-sm text-slate_custom-200 leading-relaxed mb-4">
+                                EGDFB releases a summary report identifying recurring conduct patterns among a class of California admitted carriers, including claim suppression documentation, delayed acknowledgment cycles, and misaligned adjuster incentive structures.
+                            </p>
+                            <button data-id="190" class="view-summary-btn flex items-center gap-2 text-xs font-medium text-gold-300 hover:text-gold-400 transition-colors min-h-[44px]" data-target="expand-pr2">
+                                <i data-id="191" data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                                View Summary
+                            </button>
+                            <div data-id="192" id="expand-pr2" class="expand-content mt-3 pt-3 border-t border-gold-300/10">
+                                <p data-id="193" class="text-sm text-slate_custom-300 leading-relaxed">
+                                    Analysis of 47 complaint records submitted to CDI over an 18-month period reveals statistically consistent delay patterns in the acknowledgment-to-assignment cycle that exceed regulatory benchmarks by an average of 11.3 days. EGDFB's findings have been forwarded to the California Department of Insurance Market Conduct Division.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AGENT COMPLAINTS -->
+                    <div data-id="194" class="tab-panel space-y-5 hidden" data-panel="agent">
+                        <div data-id="195" class="dossier-card rounded-xl p-5 md:p-6">
+                            <div data-id="196" class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                                <div data-id="197">
+                                    <span data-id="198" class="text-xs font-mono text-gold-300/80 tracking-wide">EGDFB-AC-2024-001</span>
+                                    <span data-id="199" class="text-xs text-slate_custom-400 ml-2 md:ml-4">February 8, 2024</span>
+                                </div>
+                                <span data-id="200" class="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full bg-status-bluebg text-status-blue w-fit">Submitted</span>
+                            </div>
+                            <p data-id="201" class="text-xs text-slate_custom-400 mb-2">Subject: <span data-id="202" class="text-slate_custom-300">[REDACTED — Licensed P&C Agent, License #XXXXX]</span></p>
+                            <p data-id="203" class="text-sm text-slate_custom-200 leading-relaxed mb-4">
+                                Formal complaint alleging misrepresentation of policy coverage scope at point of sale. The agent allegedly represented a homeowner's policy as including specific peril endorsements that were not included in the issued policy, and failed to provide a written coverage summary as required under California Insurance Code §10102.
+                            </p>
+                            <button data-id="204" class="view-summary-btn flex items-center gap-2 text-xs font-medium text-gold-300 hover:text-gold-400 transition-colors min-h-[44px]" data-target="expand-ac1">
+                                <i data-id="205" data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                                View Summary
+                            </button>
+                            <div data-id="206" id="expand-ac1" class="expand-content mt-3 pt-3 border-t border-gold-300/10">
+                                <p data-id="207" class="text-sm text-slate_custom-300 leading-relaxed">
+                                    Consumer documentation includes a pre-sale email from the agent confirming coverage for a specific peril class. Issued policy declarations do not reflect the stated endorsement. Agent's agency appointment records confirm active licensure and binding authority at the time of the transaction. EGDFB has submitted this matter to CDI's Licensing and Enforcement Branch.
+                                </p>
+                            </div>
+                        </div>
+                        <div data-id="208" class="dossier-card rounded-xl p-5 md:p-6">
+                            <div data-id="209" class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                                <div data-id="210">
+                                    <span data-id="211" class="text-xs font-mono text-gold-300/80 tracking-wide">EGDFB-AC-2024-002</span>
+                                    <span data-id="212" class="text-xs text-slate_custom-400 ml-2 md:ml-4">May 19, 2024</span>
+                                </div>
+                                <span data-id="213" class="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full bg-status-graybg text-status-gray w-fit">Pending</span>
+                            </div>
+                            <p data-id="214" class="text-xs text-slate_custom-400 mb-2">Subject: <span data-id="215" class="text-slate_custom-300">[REDACTED — Licensed Life Agent, License #XXXXX]</span></p>
+                            <p data-id="216" class="text-sm text-slate_custom-200 leading-relaxed mb-4">
+                                Complaint alleging unauthorized replacement of a life insurance policy without completing the required replacement disclosure forms under California Insurance Code §10509.4, resulting in material financial harm to the consumer.
+                            </p>
+                            <button data-id="217" class="view-summary-btn flex items-center gap-2 text-xs font-medium text-gold-300 hover:text-gold-400 transition-colors min-h-[44px]" data-target="expand-ac2">
+                                <i data-id="218" data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                                View Summary
+                            </button>
+                            <div data-id="219" id="expand-ac2" class="expand-content mt-3 pt-3 border-t border-gold-300/10">
+                                <p data-id="220" class="text-sm text-slate_custom-300 leading-relaxed">
+                                    Comparison of the original policy's guaranteed cash value projections against the replacement policy's illustrated values reveals a 23% reduction in projected benefit at age 75. No signed replacement notice was provided to the consumer prior to application submission. The agent's appointment history indicates prior CDI disciplinary action in 2019 for a related violation.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CDI COMPLAINTS -->
+                    <div data-id="221" class="tab-panel space-y-5 hidden" data-panel="cdi">
+                        <div data-id="222" class="dossier-card rounded-xl p-5 md:p-6">
+                            <div data-id="223" class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                                <div data-id="224">
+                                    <span data-id="225" class="text-xs font-mono text-gold-300/80 tracking-wide">EGDFB-CDI-2024-001</span>
+                                    <span data-id="226" class="text-xs text-slate_custom-400 ml-2 md:ml-4">January 30, 2024</span>
+                                </div>
+                                <span data-id="227" class="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full bg-status-amberbg text-status-amber w-fit">Under Review</span>
+                            </div>
+                            <p data-id="228" class="text-xs text-slate_custom-400 mb-2">Subject: <span data-id="229" class="text-slate_custom-300">[REDACTED — Admitted Carrier, NAIC #XXXXX]</span></p>
+                            <p data-id="230" class="text-sm text-slate_custom-200 leading-relaxed mb-4">
+                                Formal complaint to the California Department of Insurance alleging systematic violations of the Fair Claims Settlement Practices Regulations (10 CCR §2695 et seq.), including failure to acknowledge claims within 15 days, failure to accept or deny claims within 40 days, and failure to provide written denial explanations citing specific policy language.
+                            </p>
+                            <button data-id="231" class="view-summary-btn flex items-center gap-2 text-xs font-medium text-gold-300 hover:text-gold-400 transition-colors min-h-[44px]" data-target="expand-cdi1">
+                                <i data-id="232" data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                                View Summary
+                            </button>
+                            <div data-id="233" id="expand-cdi1" class="expand-content mt-3 pt-3 border-t border-gold-300/10">
+                                <p data-id="234" class="text-sm text-slate_custom-300 leading-relaxed">
+                                    EGDFB's forensic review of 31 claim files reveals a median acknowledgment lag of 22.7 days and a median decision lag of 58.4 days — both exceeding regulatory benchmarks. In 17 of the 31 files, denial letters failed to cite specific policy exclusions or conditions. EGDFB has submitted a formal Market Conduct complaint with supporting documentation to CDI's Consumer Communications Bureau.
+                                </p>
+                            </div>
+                        </div>
+                        <div data-id="235" class="dossier-card rounded-xl p-5 md:p-6">
+                            <div data-id="236" class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                                <div data-id="237">
+                                    <span data-id="238" class="text-xs font-mono text-gold-300/80 tracking-wide">EGDFB-CDI-2024-002</span>
+                                    <span data-id="239" class="text-xs text-slate_custom-400 ml-2 md:ml-4">July 7, 2024</span>
+                                </div>
+                                <span data-id="240" class="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full bg-status-bluebg text-status-blue w-fit">Submitted</span>
+                            </div>
+                            <p data-id="241" class="text-xs text-slate_custom-400 mb-2">Subject: <span data-id="242" class="text-slate_custom-300">[REDACTED — Admitted Carrier, NAIC #XXXXX]</span></p>
+                            <p data-id="243" class="text-sm text-slate_custom-200 leading-relaxed mb-4">
+                                Complaint alleging bad faith adjuster conduct including deliberate undervaluation of structural damage claims and coercive settlement pressure applied to unrepresented policyholders during the claims process.
+                            </p>
+                            <button data-id="244" class="view-summary-btn flex items-center gap-2 text-xs font-medium text-gold-300 hover:text-gold-400 transition-colors min-h-[44px]" data-target="expand-cdi2">
+                                <i data-id="245" data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                                View Summary
+                            </button>
+                            <div data-id="246" id="expand-cdi2" class="expand-content mt-3 pt-3 border-t border-gold-300/10">
+                                <p data-id="247" class="text-sm text-slate_custom-300 leading-relaxed">
+                                    Consumer statements and adjuster correspondence logs document settlement offers averaging 34% below independent contractor repair estimates. Adjuster communications include language suggesting policy cancellation risk if the policyholder pursued appraisal, which constitutes potential coercion under Ins. Code §790.03(h). EGDFB has submitted this matter jointly to CDI and the California Attorney General's Insurance Fraud Division.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BILL OPPOSITIONS -->
+                    <div data-id="248" class="tab-panel space-y-5 hidden" data-panel="bill">
+                        <div data-id="249" class="dossier-card rounded-xl p-5 md:p-6">
+                            <div data-id="250" class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                                <div data-id="251">
+                                    <span data-id="252" class="text-xs font-mono text-gold-300/80 tracking-wide">EGDFB-BO-2024-001</span>
+                                    <span data-id="253" class="text-xs text-slate_custom-400 ml-2 md:ml-4">March 5, 2024</span>
+                                </div>
+                                <span data-id="254" class="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full bg-status-bluebg text-status-blue w-fit">Submitted to Legislature</span>
+                            </div>
+                            <p data-id="255" class="text-xs text-slate_custom-400 mb-2">Subject: <span data-id="256" class="text-slate_custom-300">Opposition to AB XXXX — Proposed Amendment to Insurance Code §10090</span></p>
+                            <p data-id="257" class="text-sm text-slate_custom-200 leading-relaxed mb-4">
+                                EGDFB formally opposes proposed legislation that would extend carrier claim review periods from 40 to 75 days without corresponding consumer protection enhancements, arguing the amendment effectively guts the existing Fair Claims Settlement framework.
+                            </p>
+                            <button data-id="258" class="view-summary-btn flex items-center gap-2 text-xs font-medium text-gold-300 hover:text-gold-400 transition-colors min-h-[44px]" data-target="expand-bo1">
+                                <i data-id="259" data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                                View Summary
+                            </button>
+                            <div data-id="260" id="expand-bo1" class="expand-content mt-3 pt-3 border-t border-gold-300/10">
+                                <p data-id="261" class="text-sm text-slate_custom-300 leading-relaxed">
+                                    EGDFB's legislative analysis demonstrates that extending the review window without adding mandatory interim communication requirements, penalty escalation clauses, or appraisal access provisions would create a structural advantage for carriers while leaving policyholders without recourse during the extended period. EGDFB submitted formal opposition testimony to the Assembly Insurance Committee with supporting statistical analysis.
+                                </p>
+                            </div>
+                        </div>
+                        <div data-id="262" class="dossier-card rounded-xl p-5 md:p-6">
+                            <div data-id="263" class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                                <div data-id="264">
+                                    <span data-id="265" class="text-xs font-mono text-gold-300/80 tracking-wide">EGDFB-BO-2024-002</span>
+                                    <span data-id="266" class="text-xs text-slate_custom-400 ml-2 md:ml-4">September 2, 2024</span>
+                                </div>
+                                <span data-id="267" class="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full bg-status-amberbg text-status-amber w-fit">Under Legislative Review</span>
+                            </div>
+                            <p data-id="268" class="text-xs text-slate_custom-400 mb-2">Subject: <span data-id="269" class="text-slate_custom-300">Opposition to SB XXXX — Proposed Limitations on CDI Market Conduct Examinations</span></p>
+                            <p data-id="270" class="text-sm text-slate_custom-200 leading-relaxed mb-4">
+                                EGDFB opposes a proposed Senate bill that would limit CDI's authority to initiate market conduct examinations to cases where a minimum complaint threshold has been met, effectively shielding lower-volume carriers from proactive regulatory oversight.
+                            </p>
+                            <button data-id="271" class="view-summary-btn flex items-center gap-2 text-xs font-medium text-gold-300 hover:text-gold-400 transition-colors min-h-[44px]" data-target="expand-bo2">
+                                <i data-id="272" data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                                View Summary
+                            </button>
+                            <div data-id="273" id="expand-bo2" class="expand-content mt-3 pt-3 border-t border-gold-300/10">
+                                <p data-id="274" class="text-sm text-slate_custom-300 leading-relaxed">
+                                    EGDFB's analysis indicates that 62% of documented carrier conduct violations in the past three years involved admitted carriers whose complaint volumes fall below the proposed threshold. Adopting a complaint-volume trigger would functionally immunize a significant carrier segment from market conduct oversight. EGDFB has submitted a formal opposition brief to the Senate Insurance Committee and requested a public hearing.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SECTION 5: CONTACT ===== -->
+        <section data-id="275" id="contact" class="fade-in-section bg-navy-900 py-16 md:py-24 px-4 md:px-6">
+            <div data-id="276" class="max-w-5xl mx-auto">
+                <div data-id="277" class="flex items-center gap-3 mb-4">
+                    <div data-id="278" class="w-8 h-[2px] bg-gold-300"></div>
+                    <span data-id="279" class="text-gold-300 text-xs font-semibold tracking-[0.2em] uppercase">Get In Touch</span>
+                </div>
+                <h2 data-id="280" id="contact-title-r9bw" class="text-2xl md:text-3xl font-bold text-white mb-2">Contact EGDFB</h2>
+                <p data-id="281" class="text-slate_custom-300 text-sm md:text-base mb-10">Submit a Referral or Inquiry</p>
+
+                <div data-id="282" class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+                    <!-- Left: Contact Info -->
+                    <div data-id="283" class="space-y-6">
+                        <div data-id="284" class="flex items-start gap-4">
+                            <div data-id="285" class="w-10 h-10 rounded-lg bg-gold-300/10 flex items-center justify-center shrink-0">
+                                <i data-id="286" data-lucide="mail" class="w-5 h-5 text-gold-300"></i>
+                            </div>
+                            <div data-id="287">
+                                <p data-id="288" class="text-xs text-slate_custom-400 mb-1 uppercase tracking-wide font-medium">Email</p>
+                                <p data-id="289" class="text-sm text-white">submissions@egdfb.org</p>
+                            </div>
+                        </div>
+                        <div data-id="290" class="flex items-start gap-4">
+                            <div data-id="291" class="w-10 h-10 rounded-lg bg-gold-300/10 flex items-center justify-center shrink-0">
+                                <i data-id="292" data-lucide="globe" class="w-5 h-5 text-gold-300"></i>
+                            </div>
+                            <div data-id="293">
+                                <p data-id="294" class="text-xs text-slate_custom-400 mb-1 uppercase tracking-wide font-medium">Website</p>
+                                <p data-id="295" class="text-sm text-white">egdfb.org</p>
+                            </div>
+                        </div>
+                        <div data-id="296" class="flex items-start gap-4">
+                            <div data-id="297" class="w-10 h-10 rounded-lg bg-gold-300/10 flex items-center justify-center shrink-0">
+                                <i data-id="298" data-lucide="landmark" class="w-5 h-5 text-gold-300"></i>
+                            </div>
+                            <div data-id="299">
+                                <p data-id="300" class="text-xs text-slate_custom-400 mb-1 uppercase tracking-wide font-medium">Framework</p>
+                                <p data-id="301" class="text-sm text-white">Operating under the Decanon Governance Framework</p>
+                            </div>
+                        </div>
+                        <div data-id="302" class="mt-6 bg-charcoal-900/60 border border-gold-300/10 rounded-lg p-4">
+                            <div data-id="303" class="flex items-start gap-2">
+                                <i data-id="304" data-lucide="info" class="w-4 h-4 text-gold-300/60 shrink-0 mt-0.5"></i>
+                                <p data-id="305" class="text-xs text-slate_custom-400 leading-relaxed">
+                                    EGDFB does not provide legal advice. All submissions are reviewed for forensic and documentation merit.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Contact Form -->
+                    <div data-id="306">
+                        <form data-id="307" id="contact-form-n4kz" class="space-y-4">
+                            <div data-id="308">
+                                <label data-id="309" for="contact-name-e2pw" class="block text-xs font-medium text-slate_custom-300 mb-1.5 uppercase tracking-wide">Name</label>
+                                <input data-id="310" type="text" id="contact-name-e2pw" class="w-full bg-charcoal-900 border border-gold-300/15 rounded-lg px-4 py-3 text-sm text-white placeholder-slate_custom-400 focus:outline-none focus:border-gold-300/40 focus:ring-1 focus:ring-gold-300/20 transition-all" placeholder="Your full name" required />
+                            </div>
+                            <div data-id="311">
+                                <label data-id="312" for="contact-email-g5tr" class="block text-xs font-medium text-slate_custom-300 mb-1.5 uppercase tracking-wide">Email</label>
+                                <input data-id="313" type="email" id="contact-email-g5tr" class="w-full bg-charcoal-900 border border-gold-300/15 rounded-lg px-4 py-3 text-sm text-white placeholder-slate_custom-400 focus:outline-none focus:border-gold-300/40 focus:ring-1 focus:ring-gold-300/20 transition-all" placeholder="you@example.com" required />
+                            </div>
+                            <div data-id="314">
+                                <label data-id="315" for="contact-type-h8mn" class="block text-xs font-medium text-slate_custom-300 mb-1.5 uppercase tracking-wide">Inquiry Type</label>
+                                <select data-id="316" id="contact-type-h8mn" class="w-full bg-charcoal-900 border border-gold-300/15 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-gold-300/40 focus:ring-1 focus:ring-gold-300/20 transition-all appearance-none cursor-pointer" required>
+                                    <option data-id="317" value="" disabled selected>Select inquiry type</option>
+                                    <option data-id="318" value="bar">Bar Complaint Referral</option>
+                                    <option data-id="319" value="agent">Agent Complaint</option>
+                                    <option data-id="320" value="cdi">CDI Matter</option>
+                                    <option data-id="321" value="legislative">Legislative</option>
+                                    <option data-id="322" value="general">General Inquiry</option>
+                                </select>
+                            </div>
+                            <div data-id="323">
+                                <label data-id="324" for="contact-message-k3rn" class="block text-xs font-medium text-slate_custom-300 mb-1.5 uppercase tracking-wide">Message</label>
+                                <textarea data-id="325" id="contact-message-k3rn" rows="5" class="w-full bg-charcoal-900 border border-gold-300/15 rounded-lg px-4 py-3 text-sm text-white placeholder-slate_custom-400 focus:outline-none focus:border-gold-300/40 focus:ring-1 focus:ring-gold-300/20 transition-all resize-none" placeholder="Describe your inquiry or referral..." required></textarea>
+                            </div>
+                            <button data-id="326" type="submit" id="contact-submit-m7vw" class="w-full bg-gold-300 hover:bg-gold-400 text-navy-950 font-semibold px-6 py-3 rounded-lg text-sm transition-colors min-h-[44px] flex items-center justify-center gap-2">
+                                <i data-id="327" data-lucide="send" class="w-4 h-4"></i>
+                                Submit Inquiry
+                            </button>
+                        </form>
+                        <div data-id="328" id="form-confirmation-y6qp" class="hidden confirmation-msg rounded-lg p-5 mt-4 text-center">
+                            <i data-id="329" data-lucide="check-circle" class="w-6 h-6 text-green-400 mx-auto mb-2"></i>
+                            <p data-id="330" class="text-sm text-white font-medium mb-1">Your inquiry has been received.</p>
+                            <p data-id="331" class="text-xs text-slate_custom-300">EGDFB staff will review and respond within 5–7 business days.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer data-id="332" class="bg-[#070b16] border-t border-gold-300/5 py-12 px-4 md:px-6">
+        <div data-id="333" class="max-w-5xl mx-auto">
+            <div data-id="334" class="flex flex-col md:flex-row items-center md:items-start justify-between gap-8">
+                <div data-id="335" class="text-center md:text-left">
+                    <div data-id="336" class="flex items-center justify-center md:justify-start gap-2 mb-3">
+                        <div data-id="337" class="w-8 h-8 rounded-lg bg-gold-300/10 border border-gold-300/20 flex items-center justify-center">
+                            <i data-id="338" data-lucide="shield" class="w-4 h-4 text-gold-300"></i>
+                        </div>
+                        <span data-id="339" class="text-sm font-bold text-white tracking-wide">EGDFB</span>
+                    </div>
+                    <p data-id="340" class="text-xs text-gold-300/70 font-medium tracking-[0.15em] uppercase mb-4">Accountability · Integrity · Transparency</p>
+                    <nav data-id="341" class="flex flex-wrap justify-center md:justify-start gap-4 mb-6">
+                        <a data-id="342" href="#mission" class="text-xs text-slate_custom-400 hover:text-gold-300 transition-colors">Mission</a>
+                        <a data-id="343" href="#services" class="text-xs text-slate_custom-400 hover:text-gold-300 transition-colors">What We Do</a>
+                        <a data-id="344" href="#complaints" class="text-xs text-slate_custom-400 hover:text-gold-300 transition-colors">Sample Complaints</a>
+                        <a data-id="345" href="#contact" class="text-xs text-slate_custom-400 hover:text-gold-300 transition-colors">Contact</a>
+                    </nav>
+                </div>
+            </div>
+            <div data-id="346" class="border-t border-gold-300/5 mt-6 pt-6">
+                <p data-id="347" class="text-xs text-slate_custom-500 text-center mb-2">
+                    © 2024 EGDFB — External Governance & Digital Forensics Bureau. A Decanon Initiative.
+                </p>
+                <p data-id="348" class="text-xs text-slate_custom-500/70 text-center mb-4">
+                    This website is for informational purposes only. EGDFB is not a law firm and does not provide legal representation.
+                </p>
+                <p data-id="349" class="text-xs text-slate_custom-500/50 text-center">Made by Copilot</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- Lucide Icons (progressive enhancement) ---
+        if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") {
+            lucide.createIcons();
+        }
+
+        // --- Mobile Menu ---
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn-r4kp');
+        const mobileMenu = document.getElementById('mobile-menu-j7dw');
+        const mobileMenuClose = document.getElementById('mobile-menu-close-a3fn');
+
+        if (mobileMenuBtn && mobileMenu && mobileMenuClose) {
+            mobileMenuBtn.addEventListener('click', function() {
+                mobileMenu.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+            mobileMenuClose.addEventListener('click', function() {
+                mobileMenu.classList.add('hidden');
+                document.body.style.overflow = '';
+            });
+            document.querySelectorAll('.mobile-nav-link').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.add('hidden');
+                    document.body.style.overflow = '';
+                });
+            });
+        }
+
+        // --- Tabs ---
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabPanels = document.querySelectorAll('.tab-panel');
+
+        tabBtns.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var targetTab = btn.getAttribute('data-tab');
+
+                tabBtns.forEach(function(b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+
+                tabPanels.forEach(function(panel) {
+                    if (panel.getAttribute('data-panel') === targetTab) {
+                        panel.classList.remove('hidden');
+                        panel.style.opacity = '0';
+                        panel.style.transform = 'translateY(10px)';
+                        requestAnimationFrame(function() {
+                            panel.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+                            panel.style.opacity = '1';
+                            panel.style.transform = 'translateY(0)';
+                        });
+                    } else {
+                        panel.classList.add('hidden');
+                    }
+                });
+
+                // Close any open accordions in all panels
+                document.querySelectorAll('.expand-content.open').forEach(function(el) {
+                    el.classList.remove('open');
+                });
+                document.querySelectorAll('.view-summary-btn').forEach(function(b) {
+                    var chevron = b.querySelector('i');
+                    if (chevron) chevron.style.transform = '';
+                    b.querySelector('i') && (b.innerHTML = b.innerHTML);
+                });
+            });
+        });
+
+        // --- Accordion expand/collapse ---
+        document.querySelectorAll('.view-summary-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var targetId = btn.getAttribute('data-target');
+                var target = document.getElementById(targetId);
+                if (!target) return;
+
+                var isOpen = target.classList.contains('open');
+                target.classList.toggle('open');
+
+                var chevron = btn.querySelector('i');
+                if (chevron) {
+                    chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
+                }
+            });
+        });
+
+        // --- Contact Form ---
+        var contactForm = document.getElementById('contact-form-n4kz');
+        var formConfirmation = document.getElementById('form-confirmation-y6qp');
+
+        if (contactForm && formConfirmation) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                contactForm.classList.add('hidden');
+                formConfirmation.classList.remove('hidden');
+                formConfirmation.style.opacity = '0';
+                requestAnimationFrame(function() {
+                    formConfirmation.style.transition = 'opacity 0.5s ease';
+                    formConfirmation.style.opacity = '1';
+                });
+            });
+        }
+
+        // --- Scroll Fade-In (IntersectionObserver) ---
+        var fadeObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    fadeObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.08,
+            rootMargin: '0px 0px -40px 0px'
+        });
+
+        document.querySelectorAll('.fade-in-section').forEach(function(section) {
+            fadeObserver.observe(section);
+        });
+
+        // --- Navbar background change on scroll ---
+        var navbar = document.getElementById('navbar-xk82');
+        if (navbar) {
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    navbar.style.backgroundColor = 'rgba(10, 15, 30, 0.98)';
+                    navbar.style.boxShadow = '0 4px 20px rgba(0,0,0,0.3)';
+                } else {
+                    navbar.style.backgroundColor = '';
+                    navbar.style.boxShadow = '';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
