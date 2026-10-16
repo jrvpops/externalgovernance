@@ -278,7 +278,7 @@
                             <textPath data-id="52" href="#textCircleTop" startOffset="50%" text-anchor="middle">E G D F B</textPath>
                         </text>
                         <text data-id="53" fill="#f5c842" font-size="7" font-family="Inter, sans-serif" font-weight="500" letter-spacing="2" opacity="0.5">
-                            <textPath data-id="54" href="#textCircleBottom" startOffset="50%" text-anchor="middle">EST. 2024 ★ DECANON ★</textPath>
+                            <textPath data-id="54" href="#textCircleBottom" startOffset="50%" text-anchor="middle">EST. 2024 ★ EGDFB ★</textPath>
                         </text>
                         <!-- Stars -->
                         <circle data-id="55" cx="35" cy="100" r="1.5" fill="#f5c842" opacity="0.5"/>
@@ -293,7 +293,7 @@
                     Accountability · Integrity · Transparency
                 </p>
                 <p data-id="60" id="hero-body-lk4f" class="max-w-2xl text-slate_custom-300 text-sm md:text-base leading-relaxed mb-8 md:mb-10 px-2">
-                    EGDFB is an independent forensic governance body operating under the Decanon framework — dedicated to exposing systemic failures, documenting chain-of-conduct violations, and advancing structural reform across regulatory and administrative institutions.
+                    EGDFB is an independent forensic governance body operating under the EGDFB External Governance Framework — dedicated to exposing systemic failures, documenting chain-of-conduct violations, and advancing structural reform across regulatory and administrative institutions.
                 </p>
                 <div data-id="61" class="flex flex-col sm:flex-row gap-3 sm:gap-4">
                     <a data-id="62" href="#mission" id="cta-mission-p3rw" class="inline-flex items-center justify-center gap-2 bg-gold-300 hover:bg-gold-400 text-navy-950 font-semibold px-6 py-3 rounded-lg text-sm transition-colors min-h-[44px]">
@@ -709,7 +709,7 @@
                             </div>
                             <div data-id="287">
                                 <p data-id="288" class="text-xs text-slate_custom-400 mb-1 uppercase tracking-wide font-medium">Email</p>
-                                <p data-id="289" class="text-sm text-white">submissions@egdfb.org</p>
+                                <p data-id="289" class="text-sm text-white break-all"><a href="mailto:Jay-R-EGDFB.ORG@jrdecanon.com" class="hover:text-gold-300 transition-colors">Jay-R-EGDFB.ORG@jrdecanon.com</a></p>
                             </div>
                         </div>
                         <div data-id="290" class="flex items-start gap-4">
@@ -727,7 +727,7 @@
                             </div>
                             <div data-id="299">
                                 <p data-id="300" class="text-xs text-slate_custom-400 mb-1 uppercase tracking-wide font-medium">Framework</p>
-                                <p data-id="301" class="text-sm text-white">Operating under the Decanon Governance Framework</p>
+                                <p data-id="301" class="text-sm text-white">Operating under the EGDFB External Governance Framework</p>
                             </div>
                         </div>
                         <div data-id="302" class="mt-6 bg-charcoal-900/60 border border-gold-300/10 rounded-lg p-4">
@@ -742,18 +742,21 @@
 
                     <!-- Right: Contact Form -->
                     <div data-id="306">
-                        <form data-id="307" id="contact-form-n4kz" class="space-y-4">
+                        <form data-id="307" id="contact-form-n4kz" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="space-y-4">
+                            <input type="hidden" name="form-name" value="contact" />
+                            <input type="hidden" name="subject" value="New EGDFB website inquiry" />
+                            <p class="hidden"><label>Don't fill this out: <input name="bot-field" /></label></p>
                             <div data-id="308">
                                 <label data-id="309" for="contact-name-e2pw" class="block text-xs font-medium text-slate_custom-300 mb-1.5 uppercase tracking-wide">Name</label>
-                                <input data-id="310" type="text" id="contact-name-e2pw" class="w-full bg-charcoal-900 border border-gold-300/15 rounded-lg px-4 py-3 text-sm text-white placeholder-slate_custom-400 focus:outline-none focus:border-gold-300/40 focus:ring-1 focus:ring-gold-300/20 transition-all" placeholder="Your full name" required />
+                                <input data-id="310" type="text" id="contact-name-e2pw" name="name" class="w-full bg-charcoal-900 border border-gold-300/15 rounded-lg px-4 py-3 text-sm text-white placeholder-slate_custom-400 focus:outline-none focus:border-gold-300/40 focus:ring-1 focus:ring-gold-300/20 transition-all" placeholder="Your full name" required />
                             </div>
                             <div data-id="311">
                                 <label data-id="312" for="contact-email-g5tr" class="block text-xs font-medium text-slate_custom-300 mb-1.5 uppercase tracking-wide">Email</label>
-                                <input data-id="313" type="email" id="contact-email-g5tr" class="w-full bg-charcoal-900 border border-gold-300/15 rounded-lg px-4 py-3 text-sm text-white placeholder-slate_custom-400 focus:outline-none focus:border-gold-300/40 focus:ring-1 focus:ring-gold-300/20 transition-all" placeholder="you@example.com" required />
+                                <input data-id="313" type="email" id="contact-email-g5tr" name="email" class="w-full bg-charcoal-900 border border-gold-300/15 rounded-lg px-4 py-3 text-sm text-white placeholder-slate_custom-400 focus:outline-none focus:border-gold-300/40 focus:ring-1 focus:ring-gold-300/20 transition-all" placeholder="you@example.com" required />
                             </div>
                             <div data-id="314">
                                 <label data-id="315" for="contact-type-h8mn" class="block text-xs font-medium text-slate_custom-300 mb-1.5 uppercase tracking-wide">Inquiry Type</label>
-                                <select data-id="316" id="contact-type-h8mn" class="w-full bg-charcoal-900 border border-gold-300/15 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-gold-300/40 focus:ring-1 focus:ring-gold-300/20 transition-all appearance-none cursor-pointer" required>
+                                <select data-id="316" id="contact-type-h8mn" name="inquiry-type" class="w-full bg-charcoal-900 border border-gold-300/15 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-gold-300/40 focus:ring-1 focus:ring-gold-300/20 transition-all appearance-none cursor-pointer" required>
                                     <option data-id="317" value="" disabled selected>Select inquiry type</option>
                                     <option data-id="318" value="bar">Bar Complaint Referral</option>
                                     <option data-id="319" value="agent">Agent Complaint</option>
@@ -764,7 +767,7 @@
                             </div>
                             <div data-id="323">
                                 <label data-id="324" for="contact-message-k3rn" class="block text-xs font-medium text-slate_custom-300 mb-1.5 uppercase tracking-wide">Message</label>
-                                <textarea data-id="325" id="contact-message-k3rn" rows="5" class="w-full bg-charcoal-900 border border-gold-300/15 rounded-lg px-4 py-3 text-sm text-white placeholder-slate_custom-400 focus:outline-none focus:border-gold-300/40 focus:ring-1 focus:ring-gold-300/20 transition-all resize-none" placeholder="Describe your inquiry or referral..." required></textarea>
+                                <textarea data-id="325" id="contact-message-k3rn" name="message" rows="5" class="w-full bg-charcoal-900 border border-gold-300/15 rounded-lg px-4 py-3 text-sm text-white placeholder-slate_custom-400 focus:outline-none focus:border-gold-300/40 focus:ring-1 focus:ring-gold-300/20 transition-all resize-none" placeholder="Describe your inquiry or referral..." required></textarea>
                             </div>
                             <button data-id="326" type="submit" id="contact-submit-m7vw" class="w-full bg-gold-300 hover:bg-gold-400 text-navy-950 font-semibold px-6 py-3 rounded-lg text-sm transition-colors min-h-[44px] flex items-center justify-center gap-2">
                                 <i data-id="327" data-lucide="send" class="w-4 h-4"></i>
@@ -804,7 +807,7 @@
             </div>
             <div data-id="346" class="border-t border-gold-300/5 mt-6 pt-6">
                 <p data-id="347" class="text-xs text-slate_custom-500 text-center mb-2">
-                    © 2024 EGDFB — External Governance & Digital Forensics Bureau. A Decanon Initiative.
+                    © 2024 EGDFB — External Governance & Digital Forensics Bureau. Operating under the EGDFB External Governance Framework.
                 </p>
                 <p data-id="348" class="text-xs text-slate_custom-500/70 text-center mb-4">
                     This website is for informational purposes only. EGDFB is not a law firm and does not provide legal representation.
@@ -904,6 +907,22 @@
         if (contactForm && formConfirmation) {
             contactForm.addEventListener('submit', function(e) {
                 e.preventDefault();
+                var submitBtn = document.getElementById('contact-submit-m7vw');
+                submitBtn.disabled = true;
+                fetch('/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams(new FormData(contactForm)).toString()
+                }).then(function(response) {
+                    if (!response.ok) throw new Error('Submission failed');
+                    showConfirmation();
+                }).catch(function() {
+                    submitBtn.disabled = false;
+                    alert('Sorry, your inquiry could not be sent. Please try again or email Jay-R-EGDFB.ORG@jrdecanon.com directly.');
+                });
+            });
+
+            function showConfirmation() {
                 contactForm.classList.add('hidden');
                 formConfirmation.classList.remove('hidden');
                 formConfirmation.style.opacity = '0';
@@ -911,7 +930,7 @@
                     formConfirmation.style.transition = 'opacity 0.5s ease';
                     formConfirmation.style.opacity = '1';
                 });
-            });
+            }
         }
 
         // --- Scroll Fade-In (IntersectionObserver) ---
